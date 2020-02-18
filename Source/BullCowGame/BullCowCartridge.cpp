@@ -9,62 +9,21 @@ void UBullCowCartridge::BeginPlay() // When the game starts
 
 void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
 {
-    int32 a = 1;
-    int b = ++a;
-    int c = ++ ++a; //Dont
-    int d = a += 2;
-    int e = a++;
-
-    PrintLine(TEXT("%i, %i, %i, %i, %i"), a, b, c, d, e);
-
-
     if (bGameOver)
     {
-        ClearScreen();
         EndGame();
     }
     else
     {
-        if (Input == HiddenWord)
-        {
-            PrintLine(TEXT("You win"));
-            EndGame();
-        }
-        else
-        {
-            --Lives;
-            if (Lives > 0)
-            {
-                if (Input.Len() != HiddenWord.Len())
-                {
-                    PrintLine(TEXT("Try again, you still have %i lives"), Lives);
-                }
-            }
-            else
-            {
-                PrintLine(TEXT("The input word has an incorrect lenght\nthe hidden word has %i letters"), HiddenWord.Len());
-                EndGame();
-            }
-        }
+        ProcessGuess(Input);
     }
-
-
-    // if Input is valid then
-    //  check word
-    // else
-    //  print fail msg
-    //  remove life
-    // if lives > 0
-    //  try again loop
-    // else
-    //  lose msg
 }
 
 void UBullCowCartridge::SetupGame()
 {
     PrintLine(TEXT("Hi there! MOOO"));
 
-    HiddenWord = TEXT("cake");
+    HiddenWord = TEXT("cakes");
     Lives = HiddenWord.Len();
     bGameOver = false;
 
@@ -77,4 +36,36 @@ void UBullCowCartridge::EndGame()
 {
     bGameOver = true;
     PrintLine(TEXT("Do you want to try again?"));
+}
+
+void UBullCowCartridge::ProcessGuess(FString Guess)
+{
+    if (Guess == HiddenWord)
+    {
+        PrintLine(TEXT("You win"));
+        EndGame();
+        return;
+    }
+
+    // if (!IsIsogram())
+    // {
+    //     PrintLine(TEXT("No repeating letters"));
+    // }
+
+    if (Guess.Len() != HiddenWord.Len())
+    {
+        PrintLine(TEXT("The input word has an incorrect lenght\nthe hidden word has %i letters"), HiddenWord.Len());
+    }
+
+    --Lives;
+    if (Lives <= 0)
+    {
+        ClearScreen();
+        PrintLine(TEXT("The hidden word was %s"), *HiddenWord);
+        EndGame();
+        return;
+    }
+
+    PrintLine(TEXT("Try again, you still have %i lives"), Lives);
+
 }
