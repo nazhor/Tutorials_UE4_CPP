@@ -1,10 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "BullCowCartridge.h"
+#include "HiddenWordList.h"
 
 void UBullCowCartridge::BeginPlay() // When the game starts
 {
     Super::BeginPlay();
+
     SetupGame();
+
+    ValidWords = GetValidWords();
+    PrintLine(TEXT("There are %i valid words"), ValidWords.Num());
+    // for (int32 i = 0; i < ValidWords.Num(); i++)
+    // {
+    //     PrintLine(TEXT("%s"), *ValidWords[i]);
+    // }
+
 }
 
 void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
@@ -30,10 +40,6 @@ void UBullCowCartridge::SetupGame()
     PrintLine(TEXT("Guess the %i letter word."), HiddenWord.Len());
     PrintLine(TEXT("You have %i lives"), Lives);
     PrintLine(TEXT("Press enter to continue..."));
-
-    // const TCHAR HW[] = TEXT("plums");
-    // PrintLine(TEXT("Character 1 of the hidden word is %c"), HiddenWord[0]);
-    // PrintLine(TEXT("Character 4 of HW is %c"), HW[3]);
 }
 
 void UBullCowCartridge::EndGame()
@@ -88,11 +94,25 @@ bool UBullCowCartridge::IsIsogram(FString Word) const
         {
             if (Word[Index] == Word[Comparison])
             {
-                PrintLine(TEXT("No luck"));
                 return false;
             }
         }
     }
 
     return true;
+}
+
+TArray<FString> UBullCowCartridge::GetValidWords() const
+{
+    TArray<FString> AuxWordsArray;
+
+    for (int32 i = 0; i < Words.Num(); i++)
+    {
+        if (Words[i].Len() >= 4 && Words[i].Len() <= 8 && IsIsogram(*Words[i]))
+        {
+            AuxWordsArray.Emplace(Words[i]);
+        }
+    }
+
+    return AuxWordsArray;
 }
