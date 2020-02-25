@@ -6,6 +6,8 @@ void UBullCowCartridge::BeginPlay() // When the game starts
 {
     Super::BeginPlay();
 
+    
+
     SetupGame();
 
     ValidWords = GetValidWords();
@@ -17,7 +19,7 @@ void UBullCowCartridge::BeginPlay() // When the game starts
 
 }
 
-void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
+void UBullCowCartridge::OnInput(const FString& PlayerInput) // When the player hits enter
 {
     if (bGameOver)
     {
@@ -25,7 +27,7 @@ void UBullCowCartridge::OnInput(const FString& Input) // When the player hits en
     }
     else
     {
-        ProcessGuess(Input);
+        ProcessGuess(PlayerInput);
     }
 }
 
@@ -106,11 +108,19 @@ TArray<FString> UBullCowCartridge::GetValidWords() const
 {
     TArray<FString> AuxWordsArray;
 
-    for (int32 i = 0; i < Words.Num(); i++)
+    // for (int32 i = 0; i < Words.Num(); i++)
+    // {
+    //     if (Words[i].Len() >= 4 && Words[i].Len() <= 8 && IsIsogram(*Words[i]))
+    //     {
+    //         AuxWordsArray.Emplace(Words[i]);
+    //     }
+    // }
+
+    for (FString CurrentWord : Words)
     {
-        if (Words[i].Len() >= 4 && Words[i].Len() <= 8 && IsIsogram(*Words[i]))
+        if (CurrentWord.Len() >= 4 && CurrentWord.Len() <= 8 && IsIsogram(CurrentWord))
         {
-            AuxWordsArray.Emplace(Words[i]);
+            AuxWordsArray.Emplace(CurrentWord);
         }
     }
 
